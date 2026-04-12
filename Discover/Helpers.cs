@@ -8,7 +8,7 @@ namespace Discover
 {
     public static class Helpers
     {
-        public const string SERVER_BASE = "http://127.0.0.1:5000";
+        public const string SERVER_BASE = "http://127.0.0.1:7878";
 
         public static Tuple<bool, string> PostToServer(string url, string post)
         {
