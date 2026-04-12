@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Web.Script.Serialization;
+using System.Text.Json;
 using Discover.Properties;
 using Grasshopper.Kernel;
 using System.Windows.Forms;
@@ -73,7 +73,7 @@ namespace Discover
             DA.GetData<double>(2, ref val);
 
             string output_def = "{\"id\": \"" + Output_id + "\", \"name\": \"" + name + "\", \"type\": \"" + "Constraint" + "\", \"goal\": \"" + Goal + "\", \"target\": \"" + target + "\", \"value\": " + val.ToString() + "}";
-            string url = "http://127.0.0.1:5000/api/v1.0/send-output";
+            string url = Helpers.SERVER_BASE + "/api/v1.0/send-output";
 
             Tuple<bool, string> result = Helpers.PostToServer(url, output_def);
             string message = result.Item2;
@@ -85,8 +85,7 @@ namespace Discover
             }
             else
             {
-                var serializer = new JavaScriptSerializer();
-                var json = serializer.Deserialize<OutputMSG>(message);
+                var json = JsonSerializer.Deserialize<OutputMSG>(message, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 //Output_id = json.output_id;
 
@@ -94,7 +93,7 @@ namespace Discover
 
                 if (string.Equals(json.status, "run next"))
                 {
-                    Helpers.PingServer("http://127.0.0.1:5000/api/v1.0/next");
+                    Helpers.PingServer(Helpers.SERVER_BASE + "/api/v1.0/next");
                 }
             }
 

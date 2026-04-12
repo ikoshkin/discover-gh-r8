@@ -4,7 +4,7 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using Rhino.Display;
 using Rhino.DocObjects.Tables;
-using System.Web.Script.Serialization;
+using System.Text.Json;
 using Discover.Properties;
 
 
@@ -56,7 +56,7 @@ namespace Discover
             //if (!active)
             if (Equals(server_msg, "100"))
             {
-                string url = "http://127.0.0.1:5000/api/v1.0/ss-register-id";
+                string url = Helpers.SERVER_BASE + "/api/v1.0/ss-register-id";
 
                 Tuple<bool, string> result = Helpers.PostToServer(url, post);
                 string message = result.Item2;
@@ -68,8 +68,7 @@ namespace Discover
                 }
                 else
                 {
-                    var serializer = new JavaScriptSerializer();
-                    var json = serializer.Deserialize<ScreenshotMSG>(message);
+                    var json = JsonSerializer.Deserialize<ScreenshotMSG>(message, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     Helpers.Print(DA, json.status);
                     addFileWatcher(DA, json.path);
@@ -89,7 +88,7 @@ namespace Discover
                 {
 
                     ViewTable view_table = Rhino.RhinoDoc.ActiveDoc.Views;
-                    RhinoView[] views = view_table.GetViewList(true, false);
+                    RhinoView[] views = view_table.GetStandardRhinoViews();
 
                     bool exists = false;
 
@@ -125,7 +124,7 @@ namespace Discover
 
                     Bitmap bitmap = view.CaptureToBitmap(false, false, false);
 
-                    string url = "http://127.0.0.1:5000/api/v1.0/ss-get-path";
+                    string url = Helpers.SERVER_BASE + "/api/v1.0/ss-get-path";
 
                     Tuple<bool, string> result = Helpers.PostToServer(url, post);
                     string message = result.Item2;
@@ -137,8 +136,7 @@ namespace Discover
                     }
                     else
                     {
-                        var serializer = new JavaScriptSerializer();
-                        var json = serializer.Deserialize<ScreenshotMSG>(message);
+                        var json = JsonSerializer.Deserialize<ScreenshotMSG>(message, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                         if (string.Equals(json.status, "success"))
                         {
@@ -154,7 +152,7 @@ namespace Discover
                         }
                     }
 
-                    Helpers.PingServer("http://127.0.0.1:5000/api/v1.0/ss-done");
+                    Helpers.PingServer(Helpers.SERVER_BASE + "/api/v1.0/ss-done");
 
                     
                 }

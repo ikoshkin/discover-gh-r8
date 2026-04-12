@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web.Script.Serialization;
+using System.Text.Json;
 using Discover.Properties;
 using Grasshopper.Kernel;
 
@@ -73,11 +73,11 @@ namespace Discover
                 string url;
                 if (Equals(server_msg, "100"))
                 {
-                    url = "http://127.0.0.1:5000/api/v1.0/register-input";
+                    url = Helpers.SERVER_BASE + "/api/v1.0/register-input";
                 }
                 else
                 {
-                    url = "http://127.0.0.1:5000/api/v1.0/get-input";
+                    url = Helpers.SERVER_BASE + "/api/v1.0/get-input";
                 }
 
                 string input_def = "{\"id\": \"" + Input_id + "\", \"name\": \"" + "Input_Categorical" + "\", \"type\": \"" + "Categorical" + "\", \"opt\": " + num.ToString() + ", \"num\": " + count.ToString() + "}";
@@ -92,8 +92,7 @@ namespace Discover
                 }
                 else
                 {
-                    var serializer = new JavaScriptSerializer();
-                    var json = serializer.Deserialize<InputMSG>(message);
+                    var json = JsonSerializer.Deserialize<InputMSG>(message, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     Input_id = json.input_id;
 

@@ -88,7 +88,7 @@ namespace Discover
                 string path = new_file_path + "\\" + connection_file_name;
 
                 string json = "{\"path\": \"" + path_for_json + "\", \"id\": \"" + connection_id + "\"}";
-                string url = "http://127.0.0.1:5000/api/v1.0/connect";
+                string url = Helpers.SERVER_BASE + "/api/v1.0/connect";
 
                 Tuple<bool,string> result = Helpers.PostToServer(url, json);
                 string message = result.Item2;

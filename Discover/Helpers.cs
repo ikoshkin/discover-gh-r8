@@ -8,6 +8,7 @@ namespace Discover
 {
     public static class Helpers
     {
+        public const string SERVER_BASE = "http://127.0.0.1:5000";
 
         public static Tuple<bool, string> PostToServer(string url, string post)
         {
@@ -46,7 +47,7 @@ namespace Discover
             try
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.Timeout = 1;
+                httpWebRequest.Timeout = 5000;
                 //httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "GET";
 
