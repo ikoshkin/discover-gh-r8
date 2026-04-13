@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Discover.Properties;
 using Grasshopper.Kernel;
 
@@ -70,22 +69,19 @@ namespace Discover
 
                 string local_file = OnPingDocument().FilePath;
 
-                string[] file_path = local_file.Split('\\');
-                string path_for_json = string.Join("\\\\", file_path);
+                string path_for_json = local_file.Replace("\\", "\\\\");
                 string file_name = Path.GetFileNameWithoutExtension(local_file);
 
-                string[] new_file_dir = file_path.Take(file_path.Length - 1).ToArray();
-                string[] folders = { "discover", "temp" };
-                string new_file_path = string.Join("\\\\", new_file_dir.Concat(folders));
+                string new_file_dir = Path.GetDirectoryName(local_file);
+                string new_file_path = Path.Combine(new_file_dir, "discover", "temp");
 
                 if (!Directory.Exists(new_file_path))
                 {
-                    DirectoryInfo di = Directory.CreateDirectory(new_file_path);
-                    //Print(DA, "New directory created at {0}.", Directory.GetCreationTime(new_file_path));
+                    Directory.CreateDirectory(new_file_path);
                 }
-;
+
                 string connection_file_name = file_name + "." + connection_id;
-                string path = new_file_path + "\\" + connection_file_name;
+                string path = Path.Combine(new_file_path, connection_file_name);
 
                 string json = "{\"path\": \"" + path_for_json + "\", \"id\": \"" + connection_id + "\"}";
                 string url = Helpers.SERVER_BASE + "/api/v1.0/connect";
