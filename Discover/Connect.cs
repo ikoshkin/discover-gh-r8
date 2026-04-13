@@ -69,7 +69,7 @@ namespace Discover
 
                 string local_file = OnPingDocument().FilePath;
 
-                string path_for_json = local_file.Replace("\\", "\\\\");
+                string path_for_json = local_file.Replace("\\", "/");
                 string file_name = Path.GetFileNameWithoutExtension(local_file);
 
                 string new_file_dir = Path.GetDirectoryName(local_file);
